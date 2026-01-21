@@ -4,9 +4,14 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.commands.FollowPathCommand;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 
 /**
  * The methods in this class are called automatically corresponding to each mode, as described in
@@ -19,6 +24,10 @@ public class Robot extends TimedRobot {
   private String m_autoSelected;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
 
+  private RobotContainer m_robotContainer;
+
+  private Timer disabledTimer;
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -29,6 +38,27 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto choices", m_chooser);
   }
 
+/**
+   * This function is run when the robot is first started up and should be used for any initialization code.
+   */
+  @Override
+  public void robotInit()
+  {
+    // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
+    // autonomous chooser on the dashboard.
+    m_robotContainer = new RobotContainer();
+
+    // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
+    // immediately when disabled, but then also let it be pushed more 
+    disabledTimer = new Timer();
+
+    if (isSimulation())
+    {
+      DriverStation.silenceJoystickConnectionWarning(true);
+    }
+    FollowPathCommand.warmupCommand().schedule();
+  }
+
   /**
    * This function is called every 20 ms, no matter the mode. Use this for items like diagnostics
    * that you want ran during disabled, autonomous, teleoperated and test.
@@ -37,7 +67,9 @@ public class Robot extends TimedRobot {
    * SmartDashboard integrated updating.
    */
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+  }
 
   /**
    * This autonomous (along with the chooser code above) shows how to select between different
