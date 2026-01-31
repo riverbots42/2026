@@ -44,7 +44,7 @@ import swervelib.telemetry.SwerveDriveTelemetry;
 
 /**
  * Example PhotonVision class to aid in the pursuit of accurate odometry. Taken from
- * https://gitlab.com/ironclad_code/ironclad-2024/-/blob/master/src/main/java/frc/robot/vision/Vision.java?ref_type=heads
+ * https://gitlab.com/ironclad_code/ironclad-2024/ -/blob/master/src/main/java/frc/robot/vision/Vision.java?ref_type=heads
  */
 public class Vision
 {
@@ -82,24 +82,24 @@ public class Vision
    * @param currentPose Current pose supplier, should reference {@link SwerveDrive#getPose()}
    * @param field       Current field, should be {@link SwerveDrive#field}
    */
-  // public Vision(Supplier<Pose2d> currentPose, Field2d field)
-  // {
-  //   this.currentPose = currentPose;
-  //   this.field2d = field;
+  public Vision(Supplier<Pose2d> currentPose, Field2d field)
+  {
+    this.currentPose = currentPose;
+    this.field2d = field;
 
-  //   if (Robot.isSimulation())
-  //   {
-  //     visionSim = new VisionSystemSim("Vision");
-  //     visionSim.addAprilTags(fieldLayout);
+    if (Robot.isSimulation())
+    {
+      visionSim = new VisionSystemSim("Vision");
+      visionSim.addAprilTags(fieldLayout);
 
-  //     for (Cameras c : Cameras.values())
-  //     {
-  //       c.addToVisionSim(visionSim);
-  //     }
+      for (Cameras c : Cameras.values())
+      {
+        c.addToVisionSim(visionSim);
+      }
 
-  //     openSimCameraViews();
-  //   }
-  // }
+      openSimCameraViews();
+    }
+  }
 
   /**
    * Calculates a target pose relative to an AprilTag on the field.
@@ -445,7 +445,7 @@ public class Vision
         // Approximate detection noise with average and standard deviation error in pixels.
         cameraProp.setCalibError(0.25, 0.08);
         // Set the camera image capture framerate (Note: this is limited by robot loop rate).
-        cameraProp.setFPS(30);
+        cameraProp.setFPS(120);
         // The average and standard deviation in milliseconds of image data latency.
         cameraProp.setAvgLatencyMs(35);
         cameraProp.setLatencyStdDevMs(5);

@@ -36,13 +36,20 @@ import frc.robot.Constants;
 import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import java.io.File;
 import java.io.IOException;
+import java.io.ObjectInputStream.GetField;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import java.util.List;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
 import org.json.simple.parser.ParseException;
+import org.photonvision.PhotonCamera;
 import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+import edu.wpi.first.apriltag.AprilTagFieldLayout;
+import edu.wpi.first.apriltag.AprilTagFields;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -67,7 +74,8 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * PhotonVision class to keep an accurate odometry.
    */
-  private       Vision      vision;
+  public       Vision      vision;
+  
 
   /**
    * Initialize {@link SwerveDrive} with the directory provided.
@@ -85,6 +93,7 @@ public class SwerveSubsystem extends SubsystemBase
                                                     Rotation2d.fromDegrees(180));
     // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
     SwerveDriveTelemetry.verbosity = TelemetryVerbosity.HIGH;
+
     try
     {
       swerveDrive = new SwerveParser(directory).createSwerveDrive(Constants.MAX_SPEED, startingPose);
@@ -94,6 +103,7 @@ public class SwerveSubsystem extends SubsystemBase
     {
       throw new RuntimeException(e);
     }
+    
     swerveDrive.setHeadingCorrection(false); // Heading correction should only be used while controlling the robot via angle.
     swerveDrive.setCosineCompensator(false);//!SwerveDriveTelemetry.isSimulation); // Disables cosine compensation for simulations since it causes discrepancies not seen in real life.
     swerveDrive.setAngularVelocityCompensation(true,
@@ -130,10 +140,10 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * Setup the photon vision class.
    */
-  // public void setupPhotonVision()
-  // {
-  //   vision = new Vision(swerveDrive::getPose, swerveDrive.field);
-  // }
+  public void setupPhotonVision()
+  {
+     vision = new Vision(swerveDrive::getPose, swerveDrive.field);
+  }
 
   @Override
   public void periodic()
@@ -144,6 +154,21 @@ public class SwerveSubsystem extends SubsystemBase
       swerveDrive.updateOdometry();
       vision.updatePoseEstimation(swerveDrive);
     }
+  }
+  public Command getTargets(PhotonCamera camera){
+  return run(() -> {
+    System.out.println("other call");
+      List<PhotonPipelineResult> result = camera.getAllUnreadResults();
+      if (result.size() != 0)
+      {
+        var resultGot = result.get(0);
+        if (resultGot.hasTargets())
+        {
+          PhotonTrackedTarget currentTarget = resultGot.getBestTarget();
+          //System.out.println(currentTarget.getArea());
+        }
+      }
+    });
   }
 
   @Override
@@ -245,6 +270,8 @@ public class SwerveSubsystem extends SubsystemBase
       }
     });
   }
+
+
 
   /**
    * Get the path follower with events.
