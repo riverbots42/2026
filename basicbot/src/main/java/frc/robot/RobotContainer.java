@@ -4,7 +4,12 @@
 
 package frc.robot;
 
+import java.io.File;
+
+import org.photonvision.PhotonCamera;
+
 import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -19,14 +24,9 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
-import frc.robot.subsystems.swervedrive.SwerveSubsystem;
-import org.photonvision.PhotonCamera;
-import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.SimCameraProperties;
-import org.photonvision.timesync.TimeSyncSingleton;
-import java.io.File;
-import swervelib.SwerveInputStream;
 import frc.robot.subsystems.swervedrive.Shooter;
+import frc.robot.subsystems.swervedrive.SwerveSubsystem;
+import swervelib.SwerveInputStream;
 
 
 /**
@@ -177,10 +177,11 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().onTrue((Commands.runOnce(drivebase::zeroGyro)));
+      driverXbox.a().onChange((Commands.runOnce(drivebase::notAsFastSpeed, drivebase)));
+      driverXbox.b().onChange((Commands.runOnce(drivebase::fastSpeed, drivebase)));
       //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       driverXbox.y().onTrue(drivebase.getTargets(cam1));
-      driverXbox.b().onTrue(drivebase.getTargets(cam2));
+      //driverXbox.b().onTrue(drivebase.getTargets(cam2));
       driverXbox.x().whileTrue(shooterSystem.set());
       
       driverXbox.start().whileTrue(Commands.none());
