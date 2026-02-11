@@ -42,7 +42,7 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
-  PhotonCamera cam1 = new PhotonCamera("Arducam_OV9281_USB_Camera");
+  PhotonCamera cam1 = new PhotonCamera("Arducam_OV9281_USB_Camera (1)");
   PhotonCamera cam2 = new PhotonCamera("Arducam_OV9281_USB_Camera (2)");
   private final Shooter shooterSystem = new Shooter(cam1);
 
@@ -180,7 +180,7 @@ public class RobotContainer
       driverXbox.a().onChange((Commands.runOnce(drivebase::notAsFastSpeed, drivebase)));
       driverXbox.b().onChange((Commands.runOnce(drivebase::fastSpeed, drivebase)));
       //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.y().onTrue(drivebase.getTargets(cam1));
+      driverXbox.y().whileTrue(drivebase.originalTargeting());
       //driverXbox.b().onTrue(drivebase.getTargets(cam2));
       driverXbox.x().whileTrue(shooterSystem.set());
       

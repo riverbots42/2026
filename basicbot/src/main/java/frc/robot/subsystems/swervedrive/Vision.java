@@ -53,7 +53,7 @@ public class Vision
    * April Tag Field Layout of the year.
    */
   public static final AprilTagFieldLayout fieldLayout                     = AprilTagFieldLayout.loadField(
-      AprilTagFields.k2025ReefscapeAndyMark);
+      AprilTagFields.k2026RebuiltWelded);
   /**
    * Ambiguity defined as a value between (0,1). Used in {@link Vision#filterPose}.
    */
@@ -76,6 +76,8 @@ public class Vision
   private             Field2d             field2d;
 
 
+
+
   /**
    * Constructor for the Vision class.
    *
@@ -86,7 +88,7 @@ public class Vision
   {
     this.currentPose = currentPose;
     this.field2d = field;
-
+    
     if (Robot.isSimulation())
     {
       visionSim = new VisionSystemSim("Vision");
@@ -97,7 +99,6 @@ public class Vision
         c.addToVisionSim(visionSim);
       }
 
-      openSimCameraViews();
     }
   }
 
@@ -149,6 +150,7 @@ public class Vision
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                                          pose.timestampSeconds,
                                          camera.curStdDevs);
+        System.out.println(pose.estimatedPose.toPose2d());
       }
     }
 
@@ -279,24 +281,6 @@ public class Vision
     return visionSim;
   }
 
-  /**
-   * Open up the photon vision camera streams on the localhost, assumes running photon vision on localhost.
-   */
-  private void openSimCameraViews()
-  {
-    if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE))
-    {
-//      try
-//      {
-//        Desktop.getDesktop().browse(new URI("http://localhost:1182/"));
-//        Desktop.getDesktop().browse(new URI("http://localhost:1184/"));
-//        Desktop.getDesktop().browse(new URI("http://localhost:1186/"));
-//      } catch (IOException | URISyntaxException e)
-//      {
-//        e.printStackTrace();
-//      }
-    }
-  }
 
   /**
    * Update the {@link Field2d} to include tracked targets/
@@ -328,41 +312,28 @@ public class Vision
     }
 
     field2d.getObject("tracked targets").setPoses(poses);
+    
   }
-
+  public PhotonCamera getCamera()
+  {
+    return camera;
+  }
   /**
    * Camera Enum to select each camera
    */
+
   enum Cameras
   {
     /**
-     * Left Camera
+     * Main Camera
      */
-    LEFT_CAM("left",
-             new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(30)),
-             new Translation3d(Units.inchesToMeters(12.056),
-                               Units.inchesToMeters(10.981),
-                               Units.inchesToMeters(8.44)),
-             VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
-    /**
-     * Right Camera
-     */
-    RIGHT_CAM("right",
-              new Rotation3d(0, Math.toRadians(-24.094), Math.toRadians(-30)),
-              new Translation3d(Units.inchesToMeters(12.056),
-                                Units.inchesToMeters(-10.981),
-                                Units.inchesToMeters(8.44)),
-              VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1)),
-    /**
-     * Center Camera
-     */
-    CENTER_CAM("center",
-               new Rotation3d(0, Units.degreesToRadians(18), 0),
-               new Translation3d(Units.inchesToMeters(-4.628),
-                                 Units.inchesToMeters(-10.687),
-                                 Units.inchesToMeters(16.129)),
-               VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
-
+    MAIN_CAM("Arducam_OV9281_USB_Camera (1)",
+             new Rotation3d(0, Math.toRadians(45), Math.toRadians(180)),
+             new Translation3d(Units.inchesToMeters(-12.056),
+                               Units.inchesToMeters(0),
+                               Units.inchesToMeters(3.75)),
+             VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
+    
     /**
      * Latency alert to use when high latency is detected.
      */
@@ -454,7 +425,7 @@ public class Vision
         cameraSim.enableDrawWireframe(true);
       }
     }
-
+  
     /**
      * Add camera to {@link VisionSystemSim} for simulated photon vision.
      *

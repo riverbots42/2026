@@ -88,6 +88,6 @@ public class Shooter extends SubsystemBase{
         }
         return (65.29824* (Math.pow(area,-0.534256)));
     }
-
+    
 
 }

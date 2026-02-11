@@ -65,6 +65,9 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * Swerve drive object.
    */
+
+ 
+
   private final SwerveDrive swerveDrive;
   /**
    * Enable vision odometry updates while driving.
@@ -83,6 +86,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public SwerveSubsystem(File directory)
   {
+    
     boolean blueAlliance = false;
     Pose2d startingPose = blueAlliance ? new Pose2d(new Translation2d(Meter.of(1),
                                                                       Meter.of(4)),
@@ -142,6 +146,7 @@ public class SwerveSubsystem extends SubsystemBase
   public void setupPhotonVision()
   {
      vision = new Vision(swerveDrive::getPose, swerveDrive.field);
+     
   }
 
   @Override
@@ -259,25 +264,54 @@ public class SwerveSubsystem extends SubsystemBase
    *
    * @return A {@link Command} which will run the alignment.
    */
-  public Command aimAtTarget(Cameras camera)
+  public Command aimAtTarget(PhotonCamera camera)
   {
 
     return run(() -> {
-      Optional<PhotonPipelineResult> resultO = camera.getBestResult();
+      List<PhotonPipelineResult> result = camera.getAllUnreadResults();
+      if (result.size() != 0)
+      {
+        var duhTarget = result.get(0);
+        if (duhTarget.hasTargets())
+        {
+          // System.out.println("Yaw: " + duh.getBestTarget().getYaw());
+          double absturn = Math.toRadians(duhTarget.getBestTarget().getYaw());
+          
+
+          double currentHeading = getHeading().getRadians();
+          // System.out.println("Current Heading Radians: " + currentHeading);
+          ChassisSpeeds targetSpeeds = swerveDrive.swerveController.getTargetSpeeds(0,
+                                                          0,
+                                                          absturn + currentHeading,
+                                                          currentHeading,
+                                                          1);
+
+          System.out.println(currentHeading + absturn);
+
+          drive(targetSpeeds); // Not sure if this will work, more math may be required.
+        }
+      }
+    });
+  }
+  public Command originalTargeting()
+  {
+
+    return run(() -> {
+      Optional<PhotonPipelineResult> resultO = Vision.Cameras.MAIN_CAM.getBestResult();
+      
       if (resultO.isPresent())
       {
         var result = resultO.get();
         if (result.hasTargets())
         {
-          drive(getTargetSpeeds(0,
-                                0,
-                                Rotation2d.fromDegrees(result.getBestTarget()
-                                                             .getYaw()))); // Not sure if this will work, more math may be required.
+          double absturn = Math.toRadians(result.getBestTarget().getYaw());
+          double currentHeading = getHeading().getRadians();
+          
+          System.out.println("Yaw Radians: "+ absturn);
         }
       }
     });
   }
-
 
 
   /**
@@ -504,6 +538,7 @@ public class SwerveSubsystem extends SubsystemBase
                       fieldRelative,
                       false); // Open loop is disabled since it shouldn't be used most of the time.
   }
+
 
   /**
    * Drive the robot given a chassis field oriented velocity.
