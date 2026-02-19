@@ -4,6 +4,22 @@ import static edu.wpi.first.units.Units.Microseconds;
 import static edu.wpi.first.units.Units.Milliseconds;
 import static edu.wpi.first.units.Units.Seconds;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Supplier;
+
+import org.photonvision.EstimatedRobotPose;
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonPoseEstimator;
+import org.photonvision.PhotonPoseEstimator.PoseStrategy;
+import org.photonvision.PhotonUtils;
+import org.photonvision.simulation.PhotonCameraSim;
+import org.photonvision.simulation.SimCameraProperties;
+import org.photonvision.simulation.VisionSystemSim;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
 import edu.wpi.first.math.Matrix;
@@ -23,21 +39,6 @@ import edu.wpi.first.wpilibj.Alert;
 import edu.wpi.first.wpilibj.Alert.AlertType;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import frc.robot.Robot;
-import java.awt.Desktop;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Supplier;
-import org.photonvision.EstimatedRobotPose;
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonPoseEstimator;
-import org.photonvision.PhotonPoseEstimator.PoseStrategy;
-import org.photonvision.PhotonUtils;
-import org.photonvision.simulation.PhotonCameraSim;
-import org.photonvision.simulation.SimCameraProperties;
-import org.photonvision.simulation.VisionSystemSim;
-import org.photonvision.targeting.PhotonPipelineResult;
-import org.photonvision.targeting.PhotonTrackedTarget;
 import swervelib.SwerveDrive;
 import swervelib.telemetry.SwerveDriveTelemetry;
 
@@ -150,10 +151,10 @@ public class Vision
         swerveDrive.addVisionMeasurement(pose.estimatedPose.toPose2d(),
                                          pose.timestampSeconds,
                                          camera.curStdDevs);
-        System.out.println(pose.estimatedPose.toPose2d());
+        //System.out.println(pose.estimatedPose.toPose2d());
       }
     }
-
+ 
   }
 
   /**
@@ -314,10 +315,7 @@ public class Vision
     field2d.getObject("tracked targets").setPoses(poses);
     
   }
-  public PhotonCamera getCamera()
-  {
-    return camera;
-  }
+
   /**
    * Camera Enum to select each camera
    */
@@ -328,11 +326,11 @@ public class Vision
      * Main Camera
      */
     MAIN_CAM("Arducam_OV9281_USB_Camera (1)",
-             new Rotation3d(0, Math.toRadians(45), Math.toRadians(180)),
+             new Rotation3d(0, Math.toRadians(-45), Math.toRadians(180)),
              new Translation3d(Units.inchesToMeters(-12.056),
                                Units.inchesToMeters(0),
                                Units.inchesToMeters(3.75)),
-             VecBuilder.fill(4, 4, 8), VecBuilder.fill(0.5, 0.5, 1));
+             VecBuilder.fill(0, 0, 0), VecBuilder.fill(0.00007, 0.00013, 0.02));
     
     /**
      * Latency alert to use when high latency is detected.
@@ -534,6 +532,7 @@ public class Vision
       }
       estimatedRobotPose = visionEst;
     }
+
 
     /**
      * Calculates new standard deviations This algorithm is a heuristic that creates dynamic standard deviations based

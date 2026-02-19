@@ -17,6 +17,7 @@ import java.util.function.Supplier;
 
 import org.json.simple.parser.ParseException;
 import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
@@ -48,7 +49,6 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
-import frc.robot.subsystems.swervedrive.Vision.Cameras;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -72,11 +72,13 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * Enable vision odometry updates while driving.
    */
-  private final boolean     visionDriveTest = false;
+  private final boolean     visionDriveTest = true;
   /**
    * PhotonVision class to keep an accurate odometry.
    */
   public       Vision      vision;
+
+  private final Pose2d redAllianceHub = new Pose2d(12.2, 4.0, new Rotation2d());
   
 
   /**
@@ -115,12 +117,12 @@ public class SwerveSubsystem extends SubsystemBase
     swerveDrive.setModuleEncoderAutoSynchronize(false,
                                                 1); // Enable if you want to resynchronize your absolute encoders and motor encoders periodically when they are not moving.
     // swerveDrive.pushOffsetsToEncoders(); // Set the absolute encoder to be used over the internal encoder and push the offsets onto it. Throws warning if not possible
-    // if (visionDriveTest)
-    // {
-    //   setupPhotonVision();
-    //   // Stop the odometry thread if we are using vision that way we can synchronize updates better.
-    //   swerveDrive.stopOdometryThread();
-    // }
+    if (visionDriveTest)
+     {
+       setupPhotonVision();
+       // Stop the odometry thread if we are using vision that way we can synchronize updates better.
+       swerveDrive.stopOdometryThread();
+   }
     setupPathPlanner();
     RobotModeTriggers.autonomous().onTrue(Commands.runOnce(this::zeroGyroWithAlliance));
   }
@@ -146,9 +148,14 @@ public class SwerveSubsystem extends SubsystemBase
   public void setupPhotonVision()
   {
      vision = new Vision(swerveDrive::getPose, swerveDrive.field);
+     //vision.updatePoseEstimation(swerveDrive);
+     //System.out.println("vision: " + vision.getEstimatedGlobalPose(Vision.Cameras.MAIN_CAM).toString());
      
   }
-
+  public String getPhotonPose()
+  {
+    return ("vision: " + vision.getEstimatedGlobalPose(Vision.Cameras.MAIN_CAM).toString());
+  }
   @Override
   public void periodic()
   {
@@ -174,9 +181,11 @@ public class SwerveSubsystem extends SubsystemBase
       }
     });
   }
+  
    public void fastSpeed()
   {
-    swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(14), Units.degreesToRadians(180));
+
+    swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(5), Units.degreesToRadians(180));
     
   }
   public void notAsFastSpeed()
@@ -346,7 +355,33 @@ public class SwerveSubsystem extends SubsystemBase
         edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
                                      );
   }
+  public double getDistanceToPose()
+  {
+    return PhotonUtils.getDistanceToPose(this.getPose(),redAllianceHub);
 
+  }
+  public Command pointAtPose()
+  {
+    
+    return run(() -> {
+      Rotation2d correctingRotation2d = PhotonUtils.getYawToPose(this.getPose(),redAllianceHub);
+      double distance = PhotonUtils.getDistanceToPose(this.getPose(),redAllianceHub);
+      //System.out.println("Distance to Pose: "+ distance); 
+      double correctingRadians =  (this.getHeading().getRadians() + correctingRotation2d.getRadians());
+      //System.out.println("Correcting Radians: " + correctingRadians);
+      System.out.println("Correcting Rotation Degrees: " + correctingRotation2d.getDegrees());
+      if(!(Math.abs(correctingRotation2d.getDegrees()) > 173 ))
+      {
+        ChassisSpeeds targetSpeeds = swerveDrive.swerveController.getTargetSpeeds(0
+                                                          ,0
+                                                          ,correctingRadians
+                                                          , this.getHeading().getRadians()
+                                                          ,0.5); //maybe make this command take in the controller stuff and input into xInput?
+        drive(targetSpeeds);
+      }
+    });
+
+  }
   /**
    * Drive with {@link SwerveSetpointGenerator} from 254, implemented by PathPlanner.
    *
@@ -788,6 +823,7 @@ public class SwerveSubsystem extends SubsystemBase
   public void addFakeVisionReading()
   {
     swerveDrive.addVisionMeasurement(new Pose2d(3, 3, Rotation2d.fromDegrees(65)), Timer.getFPGATimestamp());
+    
   }
 
   /**

@@ -44,7 +44,7 @@ public class RobotContainer
                                                                                 "swerve/neo"));
   PhotonCamera cam1 = new PhotonCamera("Arducam_OV9281_USB_Camera (1)");
   PhotonCamera cam2 = new PhotonCamera("Arducam_OV9281_USB_Camera (2)");
-  private final Shooter shooterSystem = new Shooter(cam1);
+  private final Shooter shooterSystem = new Shooter();
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -180,13 +180,13 @@ public class RobotContainer
       driverXbox.a().onChange((Commands.runOnce(drivebase::notAsFastSpeed, drivebase)));
       driverXbox.b().onChange((Commands.runOnce(drivebase::fastSpeed, drivebase)));
       //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      driverXbox.y().whileTrue(drivebase.originalTargeting());
+      //driverXbox.y().whileTrue(drivebase.pointAtPose());
       //driverXbox.b().onTrue(drivebase.getTargets(cam2));
-      driverXbox.x().whileTrue(shooterSystem.set());
-      
+      //driverXbox.x().whileTrue(shooterSystem.set(drivebase.getDistanceToPose()));
+      driverXbox.x().whileTrue(Commands.run(shooterSystem::set, shooterSystem));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      //driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
     }
 
   }
