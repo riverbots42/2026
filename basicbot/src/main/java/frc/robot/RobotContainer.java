@@ -135,7 +135,7 @@ public class RobotContainer
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
     } else
     {
-      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+      //drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     }
 
     if (Robot.isSimulation())
@@ -184,6 +184,8 @@ public class RobotContainer
       //driverXbox.b().onTrue(drivebase.getTargets(cam2));
       //driverXbox.x().whileTrue(shooterSystem.set(drivebase.getDistanceToPose()));
       driverXbox.x().whileTrue(Commands.run(shooterSystem::set, shooterSystem));
+      
+      
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       //driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());

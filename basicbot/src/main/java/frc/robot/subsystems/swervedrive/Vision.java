@@ -325,11 +325,11 @@ public class Vision
     /**
      * Main Camera
      */
-    MAIN_CAM("Arducam_OV9281_USB_Camera (1)",
-             new Rotation3d(0, Math.toRadians(-45), Math.toRadians(180)),
-             new Translation3d(Units.inchesToMeters(-12.056),
-                               Units.inchesToMeters(0),
-                               Units.inchesToMeters(3.75)),
+    MAIN_CAM("Arducam_OV9281_USB_Camera (2)",
+             new Rotation3d(0, Math.toRadians(-60), Math.toRadians(0)),
+             new Translation3d(Units.inchesToMeters(12.6),
+                               Units.inchesToMeters(1),
+                               Units.inchesToMeters(27.4)),
              VecBuilder.fill(0, 0, 0), VecBuilder.fill(0.00007, 0.00013, 0.02));
     
     /**
