@@ -330,7 +330,7 @@ public class Vision
              new Translation3d(Units.inchesToMeters(12.6),
                                Units.inchesToMeters(1),
                                Units.inchesToMeters(27.4)),
-             VecBuilder.fill(0, 0, 0), VecBuilder.fill(0.00007, 0.00013, 0.02));
+             VecBuilder.fill(0, 0, 0), VecBuilder.fill(0.002, 0.0022, 0.0028));
     
     /**
      * Latency alert to use when high latency is detected.

@@ -49,6 +49,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
+import frc.robot.commands.AimAtHub;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -184,12 +185,13 @@ public class SwerveSubsystem extends SubsystemBase
   
    public void fastSpeed()
   {
-
+    System.out.println("FAST!!!!!!!");
     swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(5), Units.degreesToRadians(180));
     
   }
   public void notAsFastSpeed()
   {
+    System.out.println("slow :(");
     swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(1.75), Units.degreesToRadians(45));
   }
   @Override
@@ -355,9 +357,9 @@ public class SwerveSubsystem extends SubsystemBase
         edu.wpi.first.units.Units.MetersPerSecond.of(0) // Goal end velocity in meters/sec
                                      );
   }
-  public double getDistanceToPose()
+  public double getDistanceToHub()
   {
-    return PhotonUtils.getDistanceToPose(this.getPose(),redAllianceHub);
+    return PhotonUtils.getDistanceToPose(this.getPose(), AimAtHub.getAllianceHub());
 
   }
   public Command pointAtPose()

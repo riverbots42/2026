@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
+import frc.robot.commands.AimAtHub;
 import frc.robot.subsystems.swervedrive.Shooter;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
@@ -44,7 +45,7 @@ public class RobotContainer
                                                                                 "swerve/neo"));
   PhotonCamera cam1 = new PhotonCamera("Arducam_OV9281_USB_Camera (1)");
   PhotonCamera cam2 = new PhotonCamera("Arducam_OV9281_USB_Camera (2)");
-  private final Shooter shooterSystem = new Shooter();
+  private final Shooter shooterSystem = new Shooter(drivebase);
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -135,7 +136,7 @@ public class RobotContainer
       drivebase.setDefaultCommand(driveFieldOrientedDirectAngleKeyboard);
     } else
     {
-      //drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
+      drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity);
     }
 
     if (Robot.isSimulation())
@@ -182,8 +183,11 @@ public class RobotContainer
       //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       //driverXbox.y().whileTrue(drivebase.pointAtPose());
       //driverXbox.b().onTrue(drivebase.getTargets(cam2));
-      //driverXbox.x().whileTrue(shooterSystem.set(drivebase.getDistanceToPose()));
-      driverXbox.x().whileTrue(Commands.run(shooterSystem::set, shooterSystem));
+      driverXbox.x().whileTrue(shooterSystem.set());
+      //driverXbox.x().whileTrue(Commands.run(shooterSystem.set(drivebase.getDistanceToPose()), shooterSystem));
+      driverXbox.y().whileTrue(new AimAtHub(drivebase));
+      //driverXbox.leftTrigger().onTrue(Commands.runOnce(shooterSystem::decrementVelocity, shooterSystem));
+      //driverXbox.rightTrigger().onTrue(Commands.runOnce(shooterSystem::incrementVelocity, shooterSystem));
       
       
       driverXbox.start().whileTrue(Commands.none());

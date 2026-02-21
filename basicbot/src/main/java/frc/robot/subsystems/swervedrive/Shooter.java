@@ -1,9 +1,5 @@
 package frc.robot.subsystems.swervedrive;
 
-import java.util.List;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 
 import com.revrobotics.RelativeEncoder;
@@ -13,10 +9,9 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
-import frc.robot.subsystems.swervedrive.Vision;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import java.util.Optional;
 
 
 public class Shooter extends SubsystemBase
@@ -24,6 +19,8 @@ public class Shooter extends SubsystemBase
     SparkMax spinnerMax1 = new SparkMax(40, MotorType.kBrushless);
     SparkMax spinnerMax2 = new SparkMax(41, MotorType.kBrushless);
     SparkMax feederMax = new SparkMax(39, MotorType.kBrushless);
+
+    private final SwerveSubsystem drivebase;
 
     private final RelativeEncoder encoder1;
     private final RelativeEncoder encoder2;
@@ -37,8 +34,9 @@ public class Shooter extends SubsystemBase
     private final SparkMaxConfig config;
     private Vision vision;
     private PhotonPipelineResult latestResult;
+    
 
-    public Shooter()
+    public Shooter(SwerveSubsystem drivebase)
     {
         encoder1 = spinnerMax1.getEncoder();
         encoder2 = spinnerMax2.getEncoder();
@@ -49,6 +47,7 @@ public class Shooter extends SubsystemBase
         config = new SparkMaxConfig();
         config.idleMode(IdleMode.kCoast);
         workingKf = -0.511905;
+        this.drivebase = drivebase;
         //config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(0.002064500004053116,0.0,0.0);
         //config.encoder.positionConversionFactor(0.);
         //shoot.configure(config, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
@@ -64,27 +63,27 @@ public class Shooter extends SubsystemBase
                  .withName("Idle"));
 
     }
-    public void set()
-    {
-        //return run(() -> {
-            //System.out.println("Distance: " + distance);
-            //double velocity = getVelocity(distance);
-            double velocity = 150;
-            System.out.println("Velocity:" + velocity);
-            System.out.println("Encoder Velocity: " + encoder1.getVelocity());
+    
 
+    public Command set()
+    {
+        return run(()-> {
+
+            double velocity = getVelocity();
+            System.out.println("Velocity: " + velocity);
             if(velocity != 0)
             {
                 controller1.setSetpoint(-velocity, SparkBase.ControlType.kVelocity);
                 controller2.setSetpoint(-velocity, SparkBase.ControlType.kVelocity);
                 controller3.setSetpoint(-100, SparkBase.ControlType.kVelocity);
             }
-            
-      //  });
+        });   
     }
 
-    public double getVelocity(double distance)
+
+    public double getVelocity()
     {
+        double distance = drivebase.getDistanceToHub();
         if(distance == 0)
         {
             return 0;
