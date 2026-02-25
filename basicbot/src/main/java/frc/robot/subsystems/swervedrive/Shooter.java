@@ -64,18 +64,28 @@ public class Shooter extends SubsystemBase
 
     }
     
+    double velocity = 130;
+    public void incrementVelocity() { 
+        velocity = velocity + 5;
+        System.out.println("Velocity: " + velocity);
+    }
 
+    public void decrementVelocity() {
+        velocity = velocity - 5;
+        System.out.println("Velocity: " + velocity);
+    }
     public Command set()
     {
         return run(()-> {
 
             double velocity = getVelocity();
+           
             System.out.println("Velocity: " + velocity);
             if(velocity != 0)
             {
                 controller1.setSetpoint(-velocity, SparkBase.ControlType.kVelocity);
                 controller2.setSetpoint(-velocity, SparkBase.ControlType.kVelocity);
-                controller3.setSetpoint(-100, SparkBase.ControlType.kVelocity);
+                controller3.setSetpoint(-0.30, SparkBase.ControlType.kDutyCycle);
             }
         });   
     }
@@ -88,12 +98,10 @@ public class Shooter extends SubsystemBase
         {
             return 0;
         }
-        return (workingKf * distance -106.52381);
+        return (17.7 * distance + 64);
     } 
 
-    /*public Command feed()
-    {
-        return run(() -> {controller3.setSetpoint(-50, SparkBase.ControlType.kVelocity);});
-    } */
-
+   public void printDistance() {
+        System.out.println("Distance: " + drivebase.getDistanceToHub());
+   }
 }

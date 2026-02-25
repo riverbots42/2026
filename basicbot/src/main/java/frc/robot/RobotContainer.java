@@ -186,9 +186,9 @@ public class RobotContainer
       driverXbox.x().whileTrue(shooterSystem.set());
       //driverXbox.x().whileTrue(Commands.run(shooterSystem.set(drivebase.getDistanceToPose()), shooterSystem));
       driverXbox.y().whileTrue(new AimAtHub(drivebase));
-      //driverXbox.leftTrigger().onTrue(Commands.runOnce(shooterSystem::decrementVelocity, shooterSystem));
-      //driverXbox.rightTrigger().onTrue(Commands.runOnce(shooterSystem::incrementVelocity, shooterSystem));
-      
+      driverXbox.leftTrigger().onTrue(Commands.runOnce(shooterSystem::decrementVelocity, shooterSystem));
+      driverXbox.rightTrigger().onTrue(Commands.runOnce(shooterSystem::incrementVelocity, shooterSystem));
+      driverXbox.leftBumper().whileTrue(Commands.runOnce(shooterSystem::printDistance, shooterSystem));
       
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
