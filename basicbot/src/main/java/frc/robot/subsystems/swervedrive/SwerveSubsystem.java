@@ -804,9 +804,11 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * Lock the swerve drive to prevent it from moving.
    */
-  public void lock()
+  public Command lock()
   {
-    swerveDrive.lockPose();
+    return run(() -> { 
+      swerveDrive.lockPose();
+    });
   }
 
   /**

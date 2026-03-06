@@ -43,8 +43,6 @@ public class RobotContainer
   // The robot's subsystems and commands are defined here...
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
-  PhotonCamera cam1 = new PhotonCamera("Arducam_OV9281_USB_Camera (1)");
-  PhotonCamera cam2 = new PhotonCamera("Arducam_OV9281_USB_Camera (2)");
   private final Shooter shooterSystem = new Shooter(drivebase);
 
   /**
@@ -171,7 +169,7 @@ public class RobotContainer
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
       driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
-      driverXbox.y().whileTrue(drivebase.getTargets(cam1));
+      //driverXbox.y().whileTrue(drivebase.getTargets(cam1));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.back().whileTrue(drivebase.centerModulesCommand());
       driverXbox.leftBumper().onTrue(Commands.none());
@@ -182,10 +180,12 @@ public class RobotContainer
       driverXbox.b().onChange((Commands.runOnce(drivebase::fastSpeed, drivebase)));
       //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
       //driverXbox.y().whileTrue(drivebase.pointAtPose());
-      //driverXbox.b().onTrue(drivebase.getTargets(cam2));
       driverXbox.x().whileTrue(shooterSystem.set());
       //driverXbox.x().whileTrue(Commands.run(shooterSystem.set(drivebase.getDistanceToPose()), shooterSystem));
-      driverXbox.y().whileTrue(new AimAtHub(drivebase));
+      //driverXbox.y().whileTrue(new AimAtHub(drivebase));
+
+      //driverXbox.x().whileTrue(Commands.sequence(new AimAtHub(drivebase), Commands.parallel(shooterSystem.set(), drivebase.lock())));
+
       driverXbox.leftTrigger().onTrue(Commands.runOnce(shooterSystem::decrementVelocity, shooterSystem));
       driverXbox.rightTrigger().onTrue(Commands.runOnce(shooterSystem::incrementVelocity, shooterSystem));
       driverXbox.leftBumper().whileTrue(Commands.runOnce(shooterSystem::printDistance, shooterSystem));

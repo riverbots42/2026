@@ -25,20 +25,26 @@ public class AimAtHub extends Command {
     private SwerveSubsystem drivebase;
     private final static Pose2d redAllianceHub = new Pose2d(12.2, 4.0, new Rotation2d());
     private final static Pose2d blueAllianceHub = new Pose2d(4.625, 4.04, new Rotation2d());
+    private Timer stopTimer;
+
 
     public AimAtHub(SwerveSubsystem drivebase) {
-        rotController = new PIDController(0.04, 0, 0);
+        rotController = new PIDController(0.03, 0, 0);
         this.drivebase = drivebase;
         addRequirements(drivebase);
         System.out.println("Contructor:)");
+        
     }
 
     @Override
     public void initialize() {
         double yaw = PhotonUtils.getYawToPose(drivebase.getPose(), getAllianceHub()).getRadians();
         rotController.setSetpoint(yaw + drivebase.getHeading().getRadians());
-        rotController.setTolerance(Math.toRadians(1));
+        rotController.setTolerance(Math.toRadians(1.2));
         System.out.println("Init:)");
+        stopTimer = new Timer();
+        this.stopTimer.start();
+        
     }
 
     @Override
@@ -46,6 +52,10 @@ public class AimAtHub extends Command {
         double rotVal = rotController.calculate(drivebase.getHeading().getRadians()) * 100;
         drivebase.drive(new Translation2d(0, 0), -rotVal, false);
         System.out.println("Execute: " + rotVal);
+        if(!rotController.atSetpoint())
+        {
+            stopTimer.reset();
+        }
     }
 
     @Override
@@ -57,7 +67,10 @@ public class AimAtHub extends Command {
     @Override
     public boolean isFinished() {
         // Requires the robot to stay in the correct position for 0.3 seconds, as long as it gets a tag in the camera
-        return rotController.atSetpoint();
+        System.out.println("Is at SetPoint:" + rotController.atSetpoint());
+        System.out.println("Current Timer: " + this.stopTimer.get());
+        return this.stopTimer.hasElapsed(.2);
+        //return rotController.atSetpoint();
     }
 
     public static Pose2d getAllianceHub() {

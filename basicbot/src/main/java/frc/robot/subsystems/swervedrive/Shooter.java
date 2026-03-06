@@ -30,7 +30,6 @@ public class Shooter extends SubsystemBase
     private final SparkClosedLoopController controller2;
     private final SparkClosedLoopController controller3;
 
-    private final double workingKf;
     private final SparkMaxConfig config;
     private Vision vision;
     private PhotonPipelineResult latestResult;
@@ -46,7 +45,6 @@ public class Shooter extends SubsystemBase
         controller3 = feederMax.getClosedLoopController();
         config = new SparkMaxConfig();
         config.idleMode(IdleMode.kCoast);
-        workingKf = -0.511905;
         this.drivebase = drivebase;
         //config.closedLoop.feedbackSensor(FeedbackSensor.kPrimaryEncoder).pid(0.002064500004053116,0.0,0.0);
         //config.encoder.positionConversionFactor(0.);
@@ -64,7 +62,7 @@ public class Shooter extends SubsystemBase
 
     }
     
-    double velocity = 130;
+    double velocity = 50;
     public void incrementVelocity() { 
         velocity = velocity + 5;
         System.out.println("Velocity: " + velocity);
@@ -78,14 +76,14 @@ public class Shooter extends SubsystemBase
     {
         return run(()-> {
 
-            double velocity = getVelocity();
+            //double velocity = getVelocity();
            
             System.out.println("Velocity: " + velocity);
             if(velocity != 0)
             {
                 controller1.setSetpoint(-velocity, SparkBase.ControlType.kVelocity);
                 controller2.setSetpoint(-velocity, SparkBase.ControlType.kVelocity);
-                controller3.setSetpoint(-0.30, SparkBase.ControlType.kDutyCycle);
+                controller3.setSetpoint(0.30, SparkBase.ControlType.kDutyCycle);
             }
         });   
     }
