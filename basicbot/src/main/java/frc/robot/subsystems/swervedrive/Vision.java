@@ -326,7 +326,7 @@ public class Vision
      * Main Camera
      */
     MAIN_CAM("Arducam_OV9281_USB_Camera (2)",
-             new Rotation3d(0, Math.toRadians(-90), Math.toRadians(0)),
+             new Rotation3d(0, Math.toRadians(0), Math.toRadians(0)),
              new Translation3d(Units.inchesToMeters(13.25),
                                Units.inchesToMeters(1),
                                Units.inchesToMeters(27.3)),

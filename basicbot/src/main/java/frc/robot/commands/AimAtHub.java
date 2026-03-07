@@ -75,6 +75,7 @@ public class AimAtHub extends Command {
 
     public static Pose2d getAllianceHub() {
         Optional<Alliance> ally = DriverStation.getAlliance();
+        System.out.println("Team: " + ally.get().toString());
         if (ally.isPresent()) {
             if (ally.get() == Alliance.Red) {
                 System.out.println("Red");
@@ -86,7 +87,11 @@ public class AimAtHub extends Command {
             }
         }
         return new Pose2d();
+
     }
+
+    
+   
 }
 
-
+    

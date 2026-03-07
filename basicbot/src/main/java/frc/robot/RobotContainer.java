@@ -158,10 +158,7 @@ public class RobotContainer
       driverXbox.button(2).whileTrue(Commands.runEnd(() -> driveDirectAngleKeyboard.driveToPoseEnabled(true),
                                                      () -> driveDirectAngleKeyboard.driveToPoseEnabled(false)));
 
-//      driverXbox.b().whileTrue(
-//          drivebase.driveToPose(
-//              new Pose2d(new Translation2d(4, 4), Rotation2d.fromDegrees(0)))
-//                              );
+
 
     }
     if (DriverStation.isTest())
@@ -176,20 +173,18 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      driverXbox.a().onChange((Commands.runOnce(drivebase::notAsFastSpeed, drivebase)));
-      driverXbox.b().onChange((Commands.runOnce(drivebase::fastSpeed, drivebase)));
-      //driverXbox.x().onTrue(Commands.runOnce(drivebase::addFakeVisionReading));
-      //driverXbox.y().whileTrue(drivebase.pointAtPose());
+      //driverXbox.a().onChan ge((Commands.runOnce(drivebase::notAsFastSpeed, drivebase)));
+      //driverXbox.b().onChange((Commands.runOnce(drivebase::fastSpeed, drivebase)));
       driverXbox.x().whileTrue(shooterSystem.set());
-      //driverXbox.x().whileTrue(Commands.run(shooterSystem.set(drivebase.getDistanceToPose()), shooterSystem));
-      //driverXbox.y().whileTrue(new AimAtHub(drivebase));
+      driverXbox.y().whileTrue(new AimAtHub(drivebase));
 
-      //driverXbox.x().whileTrue(Commands.sequence(new AimAtHub(drivebase), Commands.parallel(shooterSystem.set(), drivebase.lock())));
+      //driverXbox.x().whileTrue(Commands.parallel(new AimAtHub(drivebase), Commands.parallel(shooterSystem.set(), drivebase.lock())));
 
       driverXbox.leftTrigger().onTrue(Commands.runOnce(shooterSystem::decrementVelocity, shooterSystem));
       driverXbox.rightTrigger().onTrue(Commands.runOnce(shooterSystem::incrementVelocity, shooterSystem));
-      driverXbox.leftBumper().whileTrue(Commands.runOnce(shooterSystem::printDistance, shooterSystem));
-      
+      driverXbox.leftBumper().whileTrue(Commands.runOnce(shooterSystem::decrementFeed,shooterSystem));
+      driverXbox.rightBumper().whileTrue(Commands.runOnce(shooterSystem::incrementFeed,shooterSystem));
+      driverXbox.b().whileTrue(Commands.run(drivebase::lock, drivebase));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
       //driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());

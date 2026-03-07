@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.DoubleSupplier;
 import java.util.function.Supplier;
@@ -22,6 +21,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.commands.PathfindingCommand;
 import com.pathplanner.lib.config.PIDConstants;
@@ -50,6 +50,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.commands.AimAtHub;
+import frc.robot.subsystems.swervedrive.Shooter;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -79,6 +80,9 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public       Vision      vision;
 
+  private Shooter shootingSystem;
+
+  private PathPlannerPath path;
   private final Pose2d redAllianceHub = new Pose2d(12.2, 4.0, new Rotation2d());
   
 
@@ -186,13 +190,13 @@ public class SwerveSubsystem extends SubsystemBase
    public void fastSpeed()
   {
     System.out.println("FAST!!!!!!!");
-    swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(5), Units.degreesToRadians(180));
+    swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(12), Units.degreesToRadians(180));
     
   }
   public void notAsFastSpeed()
   {
     System.out.println("slow :(");
-    swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(1.75), Units.degreesToRadians(45));
+    swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(3), Units.degreesToRadians(45));
   }
   @Override
   public void simulationPeriodic()
@@ -212,6 +216,7 @@ public class SwerveSubsystem extends SubsystemBase
       config = RobotConfig.fromGUISettings();
 
       final boolean enableFeedforward = true;
+      NamedCommands.registerCommand("Shoot 1 Blue 1",  Commands.parallel(shootingSystem.set(), this.lock()));
       // Configure AutoBuilder last
       AutoBuilder.configure(
           this::getPose,
@@ -266,6 +271,7 @@ public class SwerveSubsystem extends SubsystemBase
     }
 
     //Preload PathPlanner Path finding
+
     // IF USING CUSTOM PATHFINDER ADD BEFORE THIS LINE
     PathfindingCommand.warmupCommand().schedule();
   }
@@ -304,25 +310,7 @@ public class SwerveSubsystem extends SubsystemBase
       }
     });
   }
-  public Command originalTargeting()
-  {
-
-    return run(() -> {
-      Optional<PhotonPipelineResult> resultO = Vision.Cameras.MAIN_CAM.getBestResult();
-      
-      if (resultO.isPresent())
-      {
-        var result = resultO.get();
-        if (result.hasTargets())
-        {
-          double absturn = Math.toRadians(result.getBestTarget().getYaw());
-          double currentHeading = getHeading().getRadians();
-          
-          System.out.println("Yaw Radians: "+ absturn);
-        }
-      }
-    });
-  }
+  
 
 
   /**
@@ -636,10 +624,12 @@ public class SwerveSubsystem extends SubsystemBase
    * Gets the current pose (position and rotation) of the robot, as reported by odometry.
    *
    * @return The robot's pose
-   */
+   */ 
   public Pose2d getPose()
   {
-    return swerveDrive.getPose();
+    Pose2d currentPose = swerveDrive.getPose();
+    System.out.println("Pose X,Y: " + currentPose.getX() + ", " +currentPose.getY());
+    return currentPose;
   }
 
   /**
@@ -806,6 +796,7 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public Command lock()
   {
+    System.out.println("Locking");
     return run(() -> { 
       swerveDrive.lockPose();
     });
