@@ -324,10 +324,6 @@ public class SwerveSubsystem extends SubsystemBase
     return currentAuto;
   }
 
-  public void setAuto(String autoName)
-  {
-    currentAuto = new PathPlannerAuto(autoName);
-  }
   /**
    * Use PathPlanner Path finding to go to a point on the field.
    *

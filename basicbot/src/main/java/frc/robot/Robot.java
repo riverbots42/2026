@@ -21,7 +21,10 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private static final String kDefaultAuto = "Default";
-  private static final String kCustomAuto = "My Auto";
+  private static final String kAuto1 = "Auto 1;Shoot";
+  private static final String kAuto2 = "Auto 2;Shoot";
+  private static final String kAuto3 = "Auto 3;Shoot";
+
   private String m_autoSelected;
   private Command m_autoCommand;
   private final SendableChooser<String> m_chooser = new SendableChooser<>();
@@ -37,7 +40,11 @@ public class Robot extends TimedRobot {
   public Robot() {
    
     m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
-    m_chooser.addOption("My Auto", kCustomAuto);
+    m_chooser.addOption("Auto 1", kAuto1);
+    m_chooser.addOption("Auto 2", kAuto2);
+    m_chooser.addOption("Auto 3", kAuto3);
+
+
     SmartDashboard.putData("Auto choices", m_chooser);
   }
 
@@ -89,15 +96,24 @@ public class Robot extends TimedRobot {
     m_autoSelected = m_chooser.getSelected();
     
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
-    if(m_autoCommand != null)
+    if(m_autoSelected != null)
     {
-      PathPlannerAuto pathPlannerAuto = new PathPlannerAuto(m_autoSelected);
-      m_autoCommand = pathPlannerAuto.get;
-
+      PathPlannerAuto pathPlannerAuto = new PathPlannerAuto(m_autoSelected, isRedAlliance());
+      m_autoCommand = pathPlannerAuto;
+    }
+    else{
+      System.out.println("Auto selected is poop");
     }
     System.out.println("Auto selected: " + m_autoSelected);
   }
-
+  public boolean isRedAlliance()
+  {
+    if(DriverStation.getAlliance().get() == DriverStation.Alliance.Red)
+    {
+      return true;
+    }
+    return false;
+  }
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
