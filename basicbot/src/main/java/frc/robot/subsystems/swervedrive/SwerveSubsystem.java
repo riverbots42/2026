@@ -50,7 +50,6 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Config;
 import frc.robot.Constants;
 import frc.robot.commands.AimAtHub;
-import frc.robot.subsystems.swervedrive.Shooter;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.SwerveDriveTest;
@@ -82,7 +81,8 @@ public class SwerveSubsystem extends SubsystemBase
 
   private Shooter shootingSystem;
 
-  private PathPlannerPath path;
+  private static PathPlannerAuto currentAuto;
+
   private final Pose2d redAllianceHub = new Pose2d(12.2, 4.0, new Rotation2d());
   
 
@@ -271,7 +271,7 @@ public class SwerveSubsystem extends SubsystemBase
     }
 
     //Preload PathPlanner Path finding
-
+    
     // IF USING CUSTOM PATHFINDER ADD BEFORE THIS LINE
     PathfindingCommand.warmupCommand().schedule();
   }
@@ -319,12 +319,15 @@ public class SwerveSubsystem extends SubsystemBase
    * @param pathName PathPlanner path name.
    * @return {@link AutoBuilder#followPath(PathPlannerPath)} path command.
    */
-  public Command getAutonomousCommand(String pathName)
+  public Command getAutonomousCommand()
   {
-    // Create a path following command using AutoBuilder. This will also trigger event markers.
-    return new PathPlannerAuto(pathName);
+    return currentAuto;
   }
 
+  public void setAuto(String autoName)
+  {
+    currentAuto = new PathPlannerAuto(autoName);
+  }
   /**
    * Use PathPlanner Path finding to go to a point on the field.
    *

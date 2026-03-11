@@ -112,9 +112,8 @@ public class Shooter extends SubsystemBase
         return run(()-> {
             double distance = drivebase.getDistanceToHub();
 
-            //double velocity = getVelocity();
             double velocity = velocityMap.get(distance);
-            System.out.println(distance);
+            System.out.println("Distance" + distance);
             System.out.println("Velocity: " + velocity);
             if(velocity != 0)
             {
