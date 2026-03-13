@@ -105,10 +105,13 @@ public class RobotContainer
   {
     // Configure the trigger bindings
     configureBindings();
+    
     drivebase.setupPhotonVision();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
   }
+
+  
 
   /**
    * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -173,7 +176,7 @@ public class RobotContainer
       driverXbox.rightBumper().onTrue(Commands.none());
     } else
     {
-      //driverXbox.a().onChan ge((Commands.runOnce(drivebase::notAsFastSpeed, drivebase)));
+      driverXbox.a().onChange((Commands.runOnce(drivebase::notAsFastSpeed, drivebase)));
       //driverXbox.b().onChange((Commands.runOnce(drivebase::fastSpeed, drivebase)));
       driverXbox.x().whileTrue(shooterSystem.set());
       driverXbox.y().whileTrue(new AimAtHub(drivebase));
@@ -197,10 +200,13 @@ public class RobotContainer
    *
    * @return the command to run in autonomous
    */
-  public Command getAutonomousCommand()
+  public void setupPathPlannerThroughTheThang()
   {
     // An example command will be run in autonomous
-    return drivebase.getAutonomousCommand();
+    NamedCommands.registerCommand("Shoot", shooterSystem.set());
+    NamedCommands.registerCommand("Aim", new AimAtHub(drivebase));
+    NamedCommands.registerCommand("Eat", null);
+    drivebase.setupPathPlanner();
   }
 
   public void setMotorBrake(boolean brake)

@@ -92,8 +92,7 @@ public class SwerveSubsystem extends SubsystemBase
    * @param directory Directory of swerve drive config files.
    */
   public SwerveSubsystem(File directory)
-  {
-    
+  { 
     boolean blueAlliance = false;
     Pose2d startingPose = blueAlliance ? new Pose2d(new Translation2d(Meter.of(1),
                                                                       Meter.of(4)),
@@ -196,7 +195,7 @@ public class SwerveSubsystem extends SubsystemBase
   public void notAsFastSpeed()
   {
     System.out.println("slow :(");
-    swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(3), Units.degreesToRadians(45));
+    swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(1.25), Units.degreesToRadians(45));
   }
   @Override
   public void simulationPeriodic()
@@ -210,14 +209,17 @@ public class SwerveSubsystem extends SubsystemBase
   {
     // Load the RobotConfig from the GUI settings. You should probably
     // store this in your Constants file
+    System.out.println("Start of setupPathPlanner");
+
     RobotConfig config;
     try
     {
       config = RobotConfig.fromGUISettings();
 
       final boolean enableFeedforward = true;
-      NamedCommands.registerCommand("Shoot 1 Blue 1",  Commands.parallel(shootingSystem.set(), this.lock()));
+      
       // Configure AutoBuilder last
+      System.out.println("setupPathPlanner().AutoBuilderConfigure");
       AutoBuilder.configure(
           this::getPose,
           // Robot pose supplier
@@ -267,6 +269,7 @@ public class SwerveSubsystem extends SubsystemBase
     } catch (Exception e)
     {
       // Handle exception as needed
+      System.out.println("cAUGHT");
       e.printStackTrace();
     }
 

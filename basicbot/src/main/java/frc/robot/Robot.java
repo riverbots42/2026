@@ -20,10 +20,12 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
-  private static final String kDefaultAuto = "Default";
+  private static final String kTestAuto = "Test Auto";
   private static final String kAuto1 = "Auto 1;Shoot";
   private static final String kAuto2 = "Auto 2;Shoot";
   private static final String kAuto3 = "Auto 3;Shoot";
+  private static final String kAuto1Eat = "Auto 1; Intake Balls";
+
 
   private String m_autoSelected;
   private Command m_autoCommand;
@@ -39,10 +41,11 @@ public class Robot extends TimedRobot {
    */
   public Robot() {
    
-    m_chooser.setDefaultOption("Default Auto", kDefaultAuto);
+    m_chooser.setDefaultOption("Test Auto", kTestAuto);
     m_chooser.addOption("Auto 1", kAuto1);
     m_chooser.addOption("Auto 2", kAuto2);
     m_chooser.addOption("Auto 3", kAuto3);
+    m_chooser.addOption("Eat Balls", kAuto1Eat);
 
 
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -56,6 +59,7 @@ public class Robot extends TimedRobot {
   {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
+    System.out.println("Robot Init; Making Container");
     m_robotContainer = new RobotContainer();
 
     // Create a timer to disable motor brake a few seconds after disable.  This will let the robot stop
@@ -93,13 +97,17 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    System.out.println("Start Of Auto Init; Chooser Selecting");
     m_autoSelected = m_chooser.getSelected();
-    
+    m_robotContainer.setupPathPlannerThroughTheThang();
+    System.out.println("Set it up");
     // m_autoSelected = SmartDashboard.getString("Auto Selector", kDefaultAuto);
     if(m_autoSelected != null)
     {
+      System.out.println("Loading selected auto");
       PathPlannerAuto pathPlannerAuto = new PathPlannerAuto(m_autoSelected, isRedAlliance());
       m_autoCommand = pathPlannerAuto;
+      CommandScheduler.getInstance().schedule(m_autoCommand);
     }
     else{
       System.out.println("Auto selected is poop");
