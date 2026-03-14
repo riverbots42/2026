@@ -19,6 +19,8 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.RobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -26,6 +28,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.AimAtHub;
 import frc.robot.subsystems.swervedrive.Shooter;
+import frc.robot.subsystems.swervedrive.Intake;
 import frc.robot.subsystems.swervedrive.SwerveSubsystem;
 import swervelib.SwerveInputStream;
 
@@ -44,6 +47,12 @@ public class RobotContainer
   private final SwerveSubsystem       drivebase  = new SwerveSubsystem(new File(Filesystem.getDeployDirectory(),
                                                                                 "swerve/neo"));
   private final Shooter shooterSystem = new Shooter(drivebase);
+
+  private final Intake intakeSystem = new Intake();
+
+  
+
+ 
 
   /**
    * Converts driver input into a field-relative ChassisSpeeds that is controlled by angular velocity.
@@ -105,7 +114,8 @@ public class RobotContainer
   {
     // Configure the trigger bindings
     configureBindings();
-    
+
+   
     drivebase.setupPhotonVision();
     DriverStation.silenceJoystickConnectionWarning(true);
     NamedCommands.registerCommand("test", Commands.print("I EXIST"));
@@ -168,28 +178,37 @@ public class RobotContainer
     {
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
-      driverXbox.x().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
+      //driverXbox.b().whileTrue(Commands.runOnce(drivebase::lock, drivebase));
+      driverXbox.b().toggleOnTrue(intakeSystem.runIntake());
+      driverXbox.x().whileTrue(shooterSystem.set());
+      driverXbox.y().whileTrue(new AimAtHub(drivebase));
       //driverXbox.y().whileTrue(drivebase.getTargets(cam1));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.back().whileTrue(drivebase.centerModulesCommand());
-      driverXbox.leftBumper().onTrue(Commands.none());
-      driverXbox.rightBumper().onTrue(Commands.none());
-    } else
-    {
       driverXbox.a().onChange((Commands.runOnce(drivebase::notAsFastSpeed, drivebase)));
-      //driverXbox.b().onChange((Commands.runOnce(drivebase::fastSpeed, drivebase)));
-      driverXbox.x().whileTrue(shooterSystem.set());
-      driverXbox.y().whileTrue(new AimAtHub(drivebase));
-
-      //driverXbox.x().whileTrue(Commands.parallel(new AimAtHub(drivebase), Commands.parallel(shooterSystem.set(), drivebase.lock())));
-
       driverXbox.leftTrigger().onTrue(Commands.runOnce(shooterSystem::decrementVelocity, shooterSystem));
       driverXbox.rightTrigger().onTrue(Commands.runOnce(shooterSystem::incrementVelocity, shooterSystem));
       driverXbox.leftBumper().whileTrue(Commands.runOnce(shooterSystem::decrementFeed,shooterSystem));
       driverXbox.rightBumper().whileTrue(Commands.runOnce(shooterSystem::incrementFeed,shooterSystem));
+      driverXbox.povUp().whileTrue(intakeSystem.manualRaiseIntake());
+      driverXbox.povDown().whileTrue(intakeSystem.manualLowerIntake());
+    } else
+    {
+      
+      //driverXbox.b().onChange((Commands.runOnce(drivebase::fastSpeed, drivebase)));
+      driverXbox.x().whileTrue(shooterSystem.set());
+      driverXbox.y().whileTrue(new AimAtHub(drivebase));
+      driverXbox.rightBumper().whileTrue(intakeSystem.manualRaiseIntake());
+      driverXbox.leftBumper().whileTrue(intakeSystem.manualLowerIntake());
+      //driverXbox.x().whileTrue(Commands.parallel(new AimAtHub(drivebase), Commands.parallel(shooterSystem.set(), drivebase.lock())));
+
+     
       driverXbox.b().whileTrue(Commands.run(drivebase::lock, drivebase));
       driverXbox.start().whileTrue(Commands.none());
       driverXbox.back().whileTrue(Commands.none());
+      driverXbox.a().toggleOnTrue(intakeSystem.runIntake());
+      //driverXbox.rightTrigger().onTrue(Commands.runOnce(intakeSystem::lowerIntake, intakeSystem));
+      //driverXbox.leftTrigger().onTrue(Commands.runOnce(intakeSystem::raiseIntake, intakeSystem));
       //driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
     }
 
@@ -205,12 +224,19 @@ public class RobotContainer
     // An example command will be run in autonomous
     NamedCommands.registerCommand("Shoot", shooterSystem.set());
     NamedCommands.registerCommand("Aim", new AimAtHub(drivebase));
-    NamedCommands.registerCommand("Eat", null);
+    NamedCommands.registerCommand("Eat", intakeSystem.runIntake());
+    NamedCommands.registerCommand("Raise the Bridge", intakeSystem.raiseIntake());
+    NamedCommands.registerCommand("Lower the Bridge", intakeSystem.lowerIntake());
     drivebase.setupPathPlanner();
   }
 
   public void setMotorBrake(boolean brake)
   {
     drivebase.setMotorBrake(brake);
+  }
+
+  public SwerveSubsystem getSwerve()
+  {
+    return drivebase;
   }
 }

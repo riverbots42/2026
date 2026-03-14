@@ -12,8 +12,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
 
     // Set IDs
-    SparkMax raiseMax = new SparkMax(40, MotorType.kBrushless);
-    SparkMax intakeMax = new SparkMax(41, MotorType.kBrushless);
+    SparkMax raiseMax = new SparkMax(61, MotorType.kBrushless);
+    SparkMax intakeMax = new SparkMax(62, MotorType.kBrushless);
 
     private final RelativeEncoder raiseEncoder;
     private final RelativeEncoder intakeEncoder;
@@ -36,8 +36,8 @@ public class Intake extends SubsystemBase {
         setDefaultCommand(
              runOnce(
                      () -> {
-                        intakeController.setSetpoint(0, SparkBase.ControlType.kVelocity);
-                        raiseController.setSetpoint(0, SparkBase.ControlType.kVelocity);
+                        intakeController.setSetpoint(0, SparkBase.ControlType.kDutyCycle);
+                        raiseController.setSetpoint(0, SparkBase.ControlType.kDutyCycle);
                     
                      })
                  .andThen(run(() -> {}))
@@ -47,7 +47,7 @@ public class Intake extends SubsystemBase {
     public Command raiseIntake()
     {
         return run(()-> {
-
+            //Use Negative Setpoints
             //returns to top
             raiseController.setSetpoint(0.0, SparkBase.ControlType.kPosition);
         });
@@ -55,15 +55,37 @@ public class Intake extends SubsystemBase {
     public Command lowerIntake()
     {
         return run(()-> {
+            //Use Positive Setpoints
             //Need to set position points
             raiseController.setSetpoint(0.0, SparkBase.ControlType.kPosition);
+        });
+    }
+    public Command manualRaiseIntake()
+    {
+        return run(()-> {
+            //Use Negative Setpoints
+            System.out.println("^");
+            System.out.println("|");
+            raiseController.setSetpoint(-0.10, SparkBase.ControlType.kDutyCycle);
+        });
+    }
+    public Command manualLowerIntake()
+    {
+        return run(()-> {
+            //Use Positive Setpoints
+            System.out.println("|");
+            System.out.println("v");
+            raiseController.setSetpoint(0.10, SparkBase.ControlType.kDutyCycle);
         });
     }
     public Command runIntake()
     {
         return run(()->{
+            //Use Negative Setpoints
             // add correct percentage
-            intakeController.setSetpoint(0.0, SparkBase.ControlType.kDutyCycle);
+            System.out.println("yo mama");
+
+            intakeController.setSetpoint(-0.15, SparkBase.ControlType.kDutyCycle);
         }
             
         );

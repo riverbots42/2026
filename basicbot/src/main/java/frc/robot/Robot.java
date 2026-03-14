@@ -10,6 +10,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -26,6 +27,7 @@ public class Robot extends TimedRobot {
   private static final String kAuto3 = "Auto 3;Shoot";
   private static final String kAuto1Eat = "Auto 1; Intake Balls";
 
+  private final Field2d m_field = new Field2d();
 
   private String m_autoSelected;
   private Command m_autoCommand;
@@ -47,7 +49,7 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("Auto 3", kAuto3);
     m_chooser.addOption("Eat Balls", kAuto1Eat);
 
-
+    SmartDashboard.putData("Field", m_field);
     SmartDashboard.putData("Auto choices", m_chooser);
   }
 
@@ -82,6 +84,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    m_field.setRobotPose(m_robotContainer.getSwerve().getPose());
     CommandScheduler.getInstance().run();
   }
 

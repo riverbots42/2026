@@ -630,7 +630,7 @@ public class SwerveSubsystem extends SubsystemBase
   public Pose2d getPose()
   {
     Pose2d currentPose = swerveDrive.getPose();
-    System.out.println("Pose X,Y: " + currentPose.getX() + ", " +currentPose.getY());
+    //System.out.println("Pose X,Y: " + currentPose.getX() + ", " +currentPose.getY());
     return currentPose;
   }
 
