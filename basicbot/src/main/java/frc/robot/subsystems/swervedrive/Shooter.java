@@ -133,6 +133,31 @@ public class Shooter extends SubsystemBase
         });   
     }
 
+    public Command runIndex()
+    {
+        return run(()-> {
+            //double distance = drivebase.getDistanceToHub();
+
+            //double velocity = velocityMap.get(distance);
+            //System.out.println("Distance" + distance);
+           // System.out.println("Velocity: " + velocity);
+            if(velocity != 0)
+            {
+               
+                //controller3.setSetpoint(feedSpeed, SparkBase.ControlType.kDutyCycle);
+                double indexSetpoint = 0.55;
+                if(indexDirectionalityCounter < 0) {
+                    indexSetpoint = -indexSetpoint;
+                }
+                if(indexDirectionalityCounter > indexDirectionalityMax) {
+                    indexDirectionalityCounter = indexDirectionalityMin;
+                }
+                indexDirectionalityCounter++;
+                indexController.setSetpoint(-indexSetpoint, SparkBase.ControlType.kDutyCycle);
+            }
+        });   
+    }
+//aidan = goyim
 
     public double getVelocity()
     {

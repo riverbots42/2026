@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Blue; Path to Intake"
+            "pathName": "Path to Intake Left"
           }
         },
         {
@@ -17,7 +17,7 @@
               {
                 "type": "path",
                 "data": {
-                  "pathName": "Blue; Intake Balls"
+                  "pathName": "Intake Balls"
                 }
               },
               {

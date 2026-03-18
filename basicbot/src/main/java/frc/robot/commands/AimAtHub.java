@@ -69,6 +69,7 @@ public class AimAtHub extends Command {
         // Requires the robot to stay in the correct position for 0.3 seconds, as long as it gets a tag in the camera
         System.out.println("Is at SetPoint:" + rotController.atSetpoint());
         System.out.println("Current Timer: " + this.stopTimer.get());
+        System.out.println("Target Aquired");
         return this.stopTimer.hasElapsed(.2);
         //return rotController.atSetpoint();
     }

@@ -798,7 +798,8 @@ public class SwerveSubsystem extends SubsystemBase
    */
   public Command lock()
   {
-    System.out.println("Locking");
+    //System.out.println("Locking");
+    System.out.println("u r chud");
     return run(() -> { 
       swerveDrive.lockPose();
     });

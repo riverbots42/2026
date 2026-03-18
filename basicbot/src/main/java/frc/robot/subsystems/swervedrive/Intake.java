@@ -6,7 +6,7 @@ import com.revrobotics.spark.SparkClosedLoopController;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkMaxConfig;
-
+import com.revrobotics.config.BaseConfig;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class Intake extends SubsystemBase {
@@ -82,12 +82,12 @@ public class Intake extends SubsystemBase {
     {
         return run(()->{
             //Use Negative Setpoints
-            // add correct percentage
-            System.out.println("yo mama");
+            System.out.println("Intaking");
 
-            intakeController.setSetpoint(-0.15, SparkBase.ControlType.kDutyCycle);
+            intakeController.setSetpoint(-0.85, SparkBase.ControlType.kDutyCycle);
         }
             
         );
     }
 }
+//gay HAHAHAHAHHAH HHAHAHAHHA HAHAHAH... poo HAHAHAHHAHAHAHAHAHAHAHAHAHHAHAHAHAHAHAHAHAHHAHAHAHAHA

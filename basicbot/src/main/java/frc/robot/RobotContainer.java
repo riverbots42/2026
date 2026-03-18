@@ -179,7 +179,8 @@ public class RobotContainer
       drivebase.setDefaultCommand(driveFieldOrientedAnglularVelocity); // Overrides drive command above!
 
       //driverXbox.b().whileTrue(Commands.runOnce(drivebase::lock, drivebase));
-      driverXbox.b().toggleOnTrue(intakeSystem.runIntake());
+      //driverXbox.b().toggleOnTrue(intakeSystem.runIntake());
+      driverXbox.b().toggleOnTrue(Commands.parallel(intakeSystem.runIntake(), shooterSystem.runIndex()));
       driverXbox.x().whileTrue(shooterSystem.set());
       driverXbox.y().whileTrue(new AimAtHub(drivebase));
       //driverXbox.y().whileTrue(drivebase.getTargets(cam1));
@@ -195,16 +196,16 @@ public class RobotContainer
     } else
     {
       
-      //driverXbox.b().onChange((Commands.runOnce(drivebase::fastSpeed, drivebase)));
-      driverXbox.x().whileTrue(shooterSystem.set());
+      driverXbox.b().onTrue((Commands.runOnce(drivebase::fastSpeed, drivebase)));
+      //driverXbox.x().whileTrue(shooterSystem.set());
       driverXbox.y().whileTrue(new AimAtHub(drivebase));
       driverXbox.rightBumper().whileTrue(intakeSystem.manualRaiseIntake());
       driverXbox.leftBumper().whileTrue(intakeSystem.manualLowerIntake());
       //driverXbox.x().whileTrue(Commands.parallel(new AimAtHub(drivebase), Commands.parallel(shooterSystem.set(), drivebase.lock())));
 
      
-      driverXbox.b().whileTrue(Commands.run(drivebase::lock, drivebase));
-      driverXbox.start().whileTrue(Commands.none());
+      //driverXbox.b().whileTrue(Commands.run(drivebase::lock, drivebase));
+      driverXbox.x().onTrue(Commands.runOnce(drivebase::notAsFastSpeed, drivebase));
       driverXbox.back().whileTrue(Commands.none());
       driverXbox.a().toggleOnTrue(intakeSystem.runIntake());
       //driverXbox.rightTrigger().onTrue(Commands.runOnce(intakeSystem::lowerIntake, intakeSystem));
@@ -228,6 +229,7 @@ public class RobotContainer
     NamedCommands.registerCommand("Raise the Bridge", intakeSystem.raiseIntake());
     NamedCommands.registerCommand("Lower the Bridge", intakeSystem.lowerIntake());
     drivebase.setupPathPlanner();
+    intakeSystem.lowerIntake();
   }
 
   public void setMotorBrake(boolean brake)
