@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P1; Get to Position"
+            "pathName": "Blue 1; Path to Intake Left"
           }
         },
         {
@@ -15,15 +15,15 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "path",
                 "data": {
-                  "name": "Shoot"
+                  "pathName": "Blue 1; Intake Balls Left"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Aim"
+                  "name": "Eat"
                 }
               }
             ]
@@ -33,6 +33,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Blue Autos",
   "choreoAuto": false
 }

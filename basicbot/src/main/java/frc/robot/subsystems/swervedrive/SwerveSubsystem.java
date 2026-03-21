@@ -245,7 +245,7 @@ public class SwerveSubsystem extends SubsystemBase
               // PPHolonomicController is the built in path following controller for holonomic drive trains
               new PIDConstants(5.0, 0.0, 0.0),
               // Translation PID constants
-              new PIDConstants(5.0, 0.0, 0.0)
+              new PIDConstants(0.03, 0.0, 0.0)
               // Rotation PID constants
           ),
           config,
@@ -796,13 +796,11 @@ public class SwerveSubsystem extends SubsystemBase
   /**
    * Lock the swerve drive to prevent it from moving.
    */
-  public Command lock()
+  public Command lockCommand()
   {
-    //System.out.println("Locking");
-    System.out.println("u r chud");
-    return run(() -> { 
+    return runOnce(() -> {
       swerveDrive.lockPose();
-    });
+    }).repeatedly();
   }
 
   /**

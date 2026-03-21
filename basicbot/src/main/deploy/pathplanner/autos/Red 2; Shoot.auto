@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "P1; Get to Position"
+            "pathName": "Red 2; Get to Position"
           }
         },
         {
@@ -17,28 +17,22 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Shoot"
+                  "name": "Aim"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Aim"
+                  "name": "Shoot"
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "P2; Get to Outpost"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Red Autos",
   "choreoAuto": false
 }

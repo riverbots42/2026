@@ -75,6 +75,7 @@ public class Intake extends SubsystemBase {
             //Use Positive Setpoints
             System.out.println("|");
             System.out.println("v");
+            System.out.println("Position" + raiseEncoder.getPosition());
             raiseController.setSetpoint(0.10, SparkBase.ControlType.kDutyCycle);
         });
     }
@@ -84,7 +85,7 @@ public class Intake extends SubsystemBase {
             //Use Negative Setpoints
             System.out.println("Intaking");
 
-            intakeController.setSetpoint(-0.85, SparkBase.ControlType.kDutyCycle);
+            intakeController.setSetpoint(-0.65, SparkBase.ControlType.kDutyCycle);
         }
             
         );

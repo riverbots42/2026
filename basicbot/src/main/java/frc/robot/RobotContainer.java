@@ -187,30 +187,26 @@ public class RobotContainer
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.back().whileTrue(drivebase.centerModulesCommand());
       driverXbox.a().onChange((Commands.runOnce(drivebase::notAsFastSpeed, drivebase)));
-      driverXbox.leftTrigger().onTrue(Commands.runOnce(shooterSystem::decrementVelocity, shooterSystem));
-      driverXbox.rightTrigger().onTrue(Commands.runOnce(shooterSystem::incrementVelocity, shooterSystem));
+      
+      
       driverXbox.leftBumper().whileTrue(Commands.runOnce(shooterSystem::decrementFeed,shooterSystem));
       driverXbox.rightBumper().whileTrue(Commands.runOnce(shooterSystem::incrementFeed,shooterSystem));
       driverXbox.povUp().whileTrue(intakeSystem.manualRaiseIntake());
       driverXbox.povDown().whileTrue(intakeSystem.manualLowerIntake());
     } else
     {
-      
+      driverXbox.a().toggleOnTrue(intakeSystem.runIntake());
       driverXbox.b().onTrue((Commands.runOnce(drivebase::fastSpeed, drivebase)));
-      //driverXbox.x().whileTrue(shooterSystem.set());
+      driverXbox.x().whileTrue(shooterSystem.set());
       driverXbox.y().whileTrue(new AimAtHub(drivebase));
       driverXbox.rightBumper().whileTrue(intakeSystem.manualRaiseIntake());
       driverXbox.leftBumper().whileTrue(intakeSystem.manualLowerIntake());
-      //driverXbox.x().whileTrue(Commands.parallel(new AimAtHub(drivebase), Commands.parallel(shooterSystem.set(), drivebase.lock())));
+      driverXbox.leftTrigger().whileTrue(drivebase.lockCommand());
+      driverXbox.rightTrigger().whileTrue(Commands.sequence(new AimAtHub(drivebase), Commands.parallel(shooterSystem.set(), drivebase.lockCommand())));
+      //driverXbox.leftTrigger().onTrue(Commands.runOnce(shooterSystem::decrementVelocity, shooterSystem));
+      //driverXbox.rightTrigger().onTrue(Commands.runOnce(shooterSystem::incrementVelocity, shooterSystem));
 
-     
-      //driverXbox.b().whileTrue(Commands.run(drivebase::lock, drivebase));
-      driverXbox.x().onTrue(Commands.runOnce(drivebase::notAsFastSpeed, drivebase));
       driverXbox.back().whileTrue(Commands.none());
-      driverXbox.a().toggleOnTrue(intakeSystem.runIntake());
-      //driverXbox.rightTrigger().onTrue(Commands.runOnce(intakeSystem::lowerIntake, intakeSystem));
-      //driverXbox.leftTrigger().onTrue(Commands.runOnce(intakeSystem::raiseIntake, intakeSystem));
-      //driverXbox.leftBumper().whileTrue(Commands.runOnce(drivebase::lock, drivebase).repeatedly());
     }
 
   }
@@ -220,16 +216,16 @@ public class RobotContainer
    *
    * @return the command to run in autonomous
    */
-  public void setupPathPlannerThroughTheThang()
+  public void setupPathPlannerThroughTheThang() 
   {
     // An example command will be run in autonomous
     NamedCommands.registerCommand("Shoot", shooterSystem.set());
     NamedCommands.registerCommand("Aim", new AimAtHub(drivebase));
-    NamedCommands.registerCommand("Eat", intakeSystem.runIntake());
-    NamedCommands.registerCommand("Raise the Bridge", intakeSystem.raiseIntake());
-    NamedCommands.registerCommand("Lower the Bridge", intakeSystem.lowerIntake());
+    //NamedCommands.registerCommand("Eat", intakeSystem.runIntake());
+    //NamedCommands.registerCommand("Raise the Bridge", intakeSystem.raiseIntake());
+    //NamedCommands.registerCommand("Lower the Bridge", intakeSystem.lowerIntake());
     drivebase.setupPathPlanner();
-    intakeSystem.lowerIntake();
+    //intakeSystem.lowerIntake();
   }
 
   public void setMotorBrake(boolean brake)

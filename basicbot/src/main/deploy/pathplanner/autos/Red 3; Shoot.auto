@@ -1,0 +1,37 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Red 3; Get to Position"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": []
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Aim"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Red Autos",
+  "choreoAuto": false
+}

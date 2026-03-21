@@ -3,45 +3,39 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.909350348027843,
-        "y": 0.7793155452436202
+        "x": 13.145125,
+        "y": 2.385909090909091
       },
       "prevControl": null,
       "nextControl": {
-        "x": 14.372819406202144,
-        "y": 2.201011632569214
+        "x": 11.331123072951145,
+        "y": 2.839401382644068
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "R1 Path to Intake"
     },
     {
       "anchor": {
-        "x": 14.415104408352668,
-        "y": 2.2443735498839907
+        "x": 8.847181818181816,
+        "y": 0.8811136363636365
       },
       "prevControl": {
-        "x": 12.490435248045793,
-        "y": 0.9695628944966177
+        "x": 8.847181818181816,
+        "y": 1.840990812358665
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "R1 Intake"
     }
   ],
-  "rotationTargets": [],
-  "constraintZones": [],
-  "pointTowardsZones": [
+  "rotationTargets": [
     {
-      "fieldPosition": {
-        "x": 11.94,
-        "y": 4.0
-      },
-      "rotationOffset": 0.0,
-      "minWaypointRelativePos": 1.0,
-      "maxWaypointRelativePos": 1.0,
-      "name": "Point Towards Zone"
+      "waypointRelativePos": 0.03144654088050315,
+      "rotationDegrees": -135.0
     }
   ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 1.3,
@@ -53,13 +47,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 143.807
+    "rotation": 90.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Red Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

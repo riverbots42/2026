@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.6825113636363636,
-        "y": 0.7368181818181825
+        "x": 12.897761363636365,
+        "y": 0.63375
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.68251136363636,
-        "y": 0.7368181818181825
+        "x": 13.392488636363638,
+        "y": 1.2521590909090912
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.6825113636363636,
-        "y": 7.230113636363637
+        "x": 13.145125,
+        "y": 2.385909090909091
       },
       "prevControl": {
-        "x": 6.6825113636363636,
-        "y": 7.230113636363637
+        "x": 13.114204545454545,
+        "y": 1.4067613636363636
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "R1 Path to Intake"
     }
   ],
   "rotationTargets": [],
@@ -35,20 +35,20 @@
   "globalConstraints": {
     "maxVelocity": 1.3,
     "maxAcceleration": 3.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularVelocity": 10.0,
+    "maxAngularAcceleration": 10.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Red Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

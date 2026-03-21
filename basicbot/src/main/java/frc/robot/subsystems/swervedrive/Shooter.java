@@ -10,9 +10,9 @@ import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 import com.revrobotics.spark.config.SparkMaxConfig;
 
+import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.math.interpolation.InterpolatingDoubleTreeMap;
 
 
 public class Shooter extends SubsystemBase
@@ -79,10 +79,17 @@ public class Shooter extends SubsystemBase
     {
         velocityMap.put(1.45,107.0);
         velocityMap.put(2.57,120.0);
-        velocityMap.put(3.6,150.0);
-        velocityMap.put(2.6,125.0);
         velocityMap.put(2.03,120.0);
         velocityMap.put(2.11,118.0);
+        velocityMap.put(2.64,114.0);
+        velocityMap.put(3.85,140.0);
+        velocityMap.put(2.32,108.0);
+        velocityMap.put(2.25,110.0);
+        velocityMap.put(1.87,112.0);
+
+
+
+
 
     }
     double velocity = 50;

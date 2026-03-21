@@ -21,11 +21,23 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  * this project, you must also update the Main.java file in the project.
  */
 public class Robot extends TimedRobot {
-  private static final String kTestAuto = "Test Auto";
-  private static final String kAuto1 = "Auto 1;Shoot";
-  private static final String kAuto2 = "Auto 2;Shoot";
-  private static final String kAuto3 = "Auto 3;Shoot";
-  private static final String kAuto1Eat = "Auto 1; Intake Balls";
+  //Blue Autos
+  private static final String kTestAuto = "Test; Shoot";
+  private static final String kBShootLeft = "Blue 1; Shoot";
+  private static final String kBShootCenter = "Blue 2; Shoot";
+  private static final String kBShootRight = "Blue 3; Shoot";
+  private static final String kBIntakeLeftT = "Blue 1; Intake Trench";
+  private static final String kBIntakeRightT = "Blue 3; Intake Trench";
+  private static final String kBIntakeRightB = "Blue 3; Intake Bump";
+  private static final String kBIntakeLeftB = "Blue 1; Intake Bump";
+  //private static final String kShootCenter2 = "Auto 7; Shoot";
+  
+  //Red Autos
+  private static final String kRShootLeft = "Red 1; Shoot";
+  private static final String kRShootCenter = "Red 2; Shoot";
+  private static final String kRShootRight = "Red 3; Shoot";
+  private static final String kRIntakeLeftT = "Red 1; Intake Trench";
+  private static final String kRIntakeRightT = "Red 3; Intake Trench";
 
   private final Field2d m_field = new Field2d();
 
@@ -43,11 +55,27 @@ public class Robot extends TimedRobot {
    */
   public Robot() {
    
+    if(isRedAlliance() == false)
+    {
+    //Chooses Blue Alliance Autos
     m_chooser.setDefaultOption("Test Auto", kTestAuto);
-    m_chooser.addOption("Auto 1", kAuto1);
-    m_chooser.addOption("Auto 2", kAuto2);
-    m_chooser.addOption("Auto 3", kAuto3);
-    m_chooser.addOption("Eat Balls", kAuto1Eat);
+    m_chooser.addOption("B1 Shoot Left", kBShootLeft);
+    m_chooser.addOption("B2 Shoot Center", kBShootCenter);
+    m_chooser.addOption("B3 Shoot Right", kBShootRight);
+    m_chooser.addOption("B1 Intake Trench", kBIntakeLeftT);
+    m_chooser.addOption("B3 Intake Trench", kBIntakeRightT);
+    m_chooser.addOption("B1 Intake Bump", kBIntakeLeftB);
+    m_chooser.addOption("B3 Intake Bump", kBIntakeRightB);
+    //m_chooser.addOption("Eat Balls", kAuto1Eat);
+    } else
+    {
+      //Chooses Red Alliance Autos
+      m_chooser.addOption("R1 Shoot Left", kRShootLeft);
+      m_chooser.addOption("R2 Shoot Center", kRShootCenter);
+      m_chooser.addOption("R3 Shoot Right", kRShootRight);
+      m_chooser.addOption("R1 Intake Trench", kRIntakeLeftT);
+      m_chooser.addOption("R3 Intake Trench", kRIntakeRightT);
+    }
 
     SmartDashboard.putData("Field", m_field);
     SmartDashboard.putData("Auto choices", m_chooser);
@@ -86,6 +114,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     m_field.setRobotPose(m_robotContainer.getSwerve().getPose());
     CommandScheduler.getInstance().run();
+    SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
   }
 
   /**
