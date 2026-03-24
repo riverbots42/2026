@@ -76,7 +76,7 @@ public class Intake extends SubsystemBase {
             System.out.println("|");
             System.out.println("v");
             System.out.println("Position" + raiseEncoder.getPosition());
-            raiseController.setSetpoint(0.10, SparkBase.ControlType.kDutyCycle);
+            raiseController.setSetpoint(0.20, SparkBase.ControlType.kDutyCycle);
         });
     }
     public Command runIntake()

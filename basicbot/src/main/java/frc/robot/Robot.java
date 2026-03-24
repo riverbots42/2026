@@ -38,6 +38,7 @@ public class Robot extends TimedRobot {
   private static final String kRShootRight = "Red 3; Shoot";
   private static final String kRIntakeLeftT = "Red 1; Intake Trench";
   private static final String kRIntakeRightT = "Red 3; Intake Trench";
+  private static final String kRShootPF4 = "Red 1; Shoot PF 4";
 
   private final Field2d m_field = new Field2d();
 
@@ -55,10 +56,10 @@ public class Robot extends TimedRobot {
    */
   public Robot() {
    
-    if(isRedAlliance() == false)
-    {
+    
+    
     //Chooses Blue Alliance Autos
-    m_chooser.setDefaultOption("Test Auto", kTestAuto);
+    
     m_chooser.addOption("B1 Shoot Left", kBShootLeft);
     m_chooser.addOption("B2 Shoot Center", kBShootCenter);
     m_chooser.addOption("B3 Shoot Right", kBShootRight);
@@ -67,19 +68,19 @@ public class Robot extends TimedRobot {
     m_chooser.addOption("B1 Intake Bump", kBIntakeLeftB);
     m_chooser.addOption("B3 Intake Bump", kBIntakeRightB);
     //m_chooser.addOption("Eat Balls", kAuto1Eat);
-    } else
-    {
-      //Chooses Red Alliance Autos
-      m_chooser.addOption("R1 Shoot Left", kRShootLeft);
-      m_chooser.addOption("R2 Shoot Center", kRShootCenter);
-      m_chooser.addOption("R3 Shoot Right", kRShootRight);
-      m_chooser.addOption("R1 Intake Trench", kRIntakeLeftT);
-      m_chooser.addOption("R3 Intake Trench", kRIntakeRightT);
-    }
 
+    //Chooses Red Alliance Autos
+    m_chooser.addOption("R1 Shoot Left", kRShootLeft);
+    m_chooser.addOption("R2 Shoot Center", kRShootCenter);
+    m_chooser.addOption("R3 Shoot Right", kRShootRight);
+    m_chooser.addOption("R1 Intake Trench", kRIntakeLeftT);
+    m_chooser.addOption("R3 Intake Trench", kRIntakeRightT);
+    m_chooser.addOption("R1 Shoot PF 4", kRShootPF4);
+
+    m_chooser.setDefaultOption("Test Auto", kTestAuto);
     SmartDashboard.putData("Field", m_field);
     SmartDashboard.putData("Auto choices", m_chooser);
-  }
+    }
 
 /**
    * This function is run when the robot is first started up and should be used for any initialization code.
@@ -130,6 +131,34 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     System.out.println("Start Of Auto Init; Chooser Selecting");
+    // if(isRedAlliance())
+    // {
+    //   switch(m_chooser.getSelected())
+    //   {
+    //     case kBShootLeft:
+    //       m_autoSelected = kRShootLeft;
+    //       break;
+    //     case kBShootCenter:
+    //       m_autoSelected = kRShootCenter;
+    //       break;
+    //       case kBShootRight:
+    //       m_autoSelected = kRShootRight;
+    //       break;
+    //     case kBIntakeLeftT:
+    //       m_autoSelected = kRIntakeLeftT;
+    //       break;
+    //     case kBIntakeRightT:
+    //       m_autoSelected = kRIntakeRightT;
+    //       break;
+    //     case kBIntakeRightB:
+    //       m_autoSelected = null;
+    //       break;
+    //     case kBIntakeLeftB:
+    //       m_autoSelected = null;
+    //       break;
+          
+    //   }
+    // }
     m_autoSelected = m_chooser.getSelected();
     m_robotContainer.setupPathPlannerThroughTheThang();
     System.out.println("Set it up");

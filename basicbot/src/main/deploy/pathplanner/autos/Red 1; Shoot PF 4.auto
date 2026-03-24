@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Red 3; Get to Position"
+            "pathName": "Red 1; Shoot Playoff 4"
           }
         },
         {
@@ -17,13 +17,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "Shoot"
+                  "name": "Aim"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "Aim"
+                  "name": "Shoot"
                 }
               }
             ]
@@ -33,6 +33,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Red Autos",
+  "folder": null,
   "choreoAuto": false
 }
