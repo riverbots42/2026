@@ -186,7 +186,7 @@ public class RobotContainer
       //driverXbox.y().whileTrue(drivebase.getTargets(cam1));
       driverXbox.start().onTrue((Commands.runOnce(drivebase::zeroGyro)));
       driverXbox.back().whileTrue(drivebase.centerModulesCommand());
-      driverXbox.a().onChange((Commands.runOnce(drivebase::notAsFastSpeed, drivebase)));
+      driverXbox.a().onChange((Commands.runOnce(drivebase::toggleFastSpeed, drivebase)));
       
       
       driverXbox.leftBumper().whileTrue(Commands.runOnce(shooterSystem::decrementFeed,shooterSystem));
@@ -196,7 +196,7 @@ public class RobotContainer
     } else
     {
       driverXbox.a().toggleOnTrue(intakeSystem.runIntake());
-      driverXbox.b().onTrue((Commands.runOnce(drivebase::fastSpeed, drivebase)));
+      driverXbox.b().onTrue((Commands.runOnce(drivebase::toggleFastSpeed, drivebase)));
       driverXbox.x().whileTrue(shooterSystem.set());
       driverXbox.y().whileTrue(new AimAtHub(drivebase));
       driverXbox.rightBumper().whileTrue(intakeSystem.manualRaiseIntake());

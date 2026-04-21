@@ -84,6 +84,8 @@ public class SwerveSubsystem extends SubsystemBase
   private static PathPlannerAuto currentAuto;
 
   private final Pose2d redAllianceHub = new Pose2d(12.2, 4.0, new Rotation2d());
+
+  private double currentSpeedSetting = 14.5;
   
 
   /**
@@ -186,16 +188,22 @@ public class SwerveSubsystem extends SubsystemBase
     });
   }
   
-   public void fastSpeed()
+
+  public void toggleFastSpeed()
   {
-    System.out.println("FAST!!!!!!!");
-    swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(12), Units.degreesToRadians(180));
     
-  }
-  public void notAsFastSpeed()
-  {
-    System.out.println("slow :(");
-    swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(1.25), Units.degreesToRadians(45));
+    if(currentSpeedSetting == 14.5)
+    {
+      System.out.println("slow :(");
+      currentSpeedSetting = 3.5;
+    }
+    else
+    {
+      System.out.println("fast :)");
+      currentSpeedSetting = 14.5;
+    }
+    System.out.println("Speed: " + currentSpeedSetting);
+    swerveDrive.setMaximumAllowableSpeeds(Units.feetToMeters(currentSpeedSetting), Units.degreesToRadians(45));
   }
   @Override
   public void simulationPeriodic()
