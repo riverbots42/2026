@@ -1,0 +1,42 @@
+Controls for Robot:
+Joysticks = swerve drive
+
+If in Test Mode:
+    DPAD Up = Raise Intake
+    DPAD Down = Lower Intake
+    DPAD Left = N/A
+    DPAD Right = N/A
+
+    A = Toggle Fast Speed
+    B = Run Intake and Run Index
+    X = Shoot
+    Y =  Aim
+    
+    LB = Slow Shooter Speed
+    RB = Raise Shooter Speed
+
+    LT = N/A
+    RT = N/A
+
+    L3 = N/A
+    R3 = N/A
+
+If not in Test Mode:
+    DPAD Up = N/A
+    DPAD Down = N/A
+    DPAD Left = N/A
+    DPAD Right = N/A
+
+    A = Run Intake
+    B = Toggle Fast Speed
+    X = Shoot
+    Y = Aim
+    
+    LB = Lower Intake
+    RB = Raise Intake
+
+    LT = Drive Lock
+    RT = Shooting Sequence
+
+    L3 = N/A
+    R3 = N/A   
